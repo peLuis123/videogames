@@ -26,8 +26,8 @@
     <v-card-actions  class="action-buttons">
       <v-btn v-if="rol === 'admin'" color="blue darken-2" @click="$emit('edit', game)" text>Editar</v-btn>
       <v-btn v-if="rol === 'admin'" color="red darken-2" @click="$emit('delete', game)" text>Eliminar</v-btn>
-      <v-btn v-if="game.accessType.subscription && rol === 'user'" color="blue darken-2" @click="$emit('buyGame', game)" text>Comprar</v-btn>
-      <v-btn v-if="game.accessType.purchase && rol === 'user'" color="blue darken-2" @click="$emit('subGame', game)" text>Subscribirse</v-btn>
+      <v-btn v-if="game.accessType.purchase && rol === 'user'" color="blue darken-2" @click="$emit('buyGame', game)" text>Comprar</v-btn>
+      <v-btn v-if="game.accessType.subscription && rol === 'user'" color="blue darken-2" @click="$emit('subGame', game)" text>Subscribirse</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -37,6 +37,7 @@ import { computed } from 'vue';
 import { useAuthStore } from "@/store/authStore";
 
 const props = defineProps(['game']);
+ 
 const authStore = useAuthStore();
 const rol = computed(() => authStore.rol);
 const apiHost = import.meta.env.VITE_API_HOST;

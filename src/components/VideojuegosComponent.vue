@@ -1,5 +1,5 @@
 <template>
-  <v-btn color="primary" @click="openAddModal">Agregar Videojuego</v-btn>
+  <v-btn v-if='rol==="admin"' color="primary" @click="openAddModal">Agregar Videojuego</v-btn>
   <v-row class="mt-4" dense>
     <v-col
       class="mb-5"
@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted,computed } from "vue";
 import VideoJuegoCard from "@/components/VideoJuegoCard.vue";
 import AgregarVideojuegoModal from "@/components/VideojuegoAgregarModal.vue";
 import EditarVideojuegoModal from "@/components/VideojuegoEditarModal.vue";
@@ -53,7 +53,10 @@ const selectedGameId = ref(null);
 const isAddModalOpen = ref(false);
 const isEditModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
+import { useAuthStore } from "@/store/authStore";
 
+const authStore = useAuthStore();
+const rol = computed(() => authStore.rol);
 const openAddModal = () => (isAddModalOpen.value = true);
 
 const closeAddModal = () => (isAddModalOpen.value = false);
@@ -135,8 +138,7 @@ const subGame = async (game) => {
   const data = {
     videojuegoId: game._id,
     accessType: "subscription",
-  };
-  console.log("Sub", data);
+  }; 
   await LibraryAPI.addLibrary(data)
 };
 const buyGame = async (game) => {
