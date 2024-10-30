@@ -16,7 +16,7 @@
       </div>
       <v-list nav>
         <v-list-item
-          v-for="(item, index) in menuItems"
+          v-for="(item, index) in filteredMenuItems"
           :key="index"
           :prepend-icon="item.icon"
           :title="item.title"
@@ -27,18 +27,44 @@
     </v-navigation-drawer>
   </v-card>
 </template>
+
 <script setup>
-import { ref, watch } from "vue";
+import { ref, computed, watch } from "vue";
+import { useAuthStore } from "@/store/authStore";
 
 import logo from "@/assets/images/logo.svg?raw";
+ 
+const authStore = useAuthStore();
+
 const props = defineProps({
   drawer: Boolean,
 });
+ 
 const menuItems = [
-  { icon: "mdi-view-dashboard", title: "item1", value: "/" },
-  { icon: " mdi-account-alert", title: "Item2", value: "/route1" },
-  { icon: " mdi-account-alert", title: "Item3", value: "/route2" },
+  {
+    icon: "mdi-view-dashboard",
+    title: "users",
+    value: "/",
+    roles: [ "admin"],
+  },
+  {
+    icon: "mdi-account-alert",
+    title: "Videojuegos",
+    value: "/games",
+    roles: ["user", "admin"],
+  },
+  {
+    icon: "mdi-account-alert",
+    title: "biblioteca",
+    value: "/biblioteca",
+    roles: ["user"],
+  },
 ];
+ 
+const filteredMenuItems = computed(() => {
+  return menuItems.filter((item) => item.roles.includes(authStore.rol));
+});
+
 const drawer = ref(props.drawer);
 
 watch(
@@ -48,6 +74,7 @@ watch(
   }
 );
 </script>
+
 <style scoped>
 .app-logo {
   display: flex;
@@ -61,6 +88,7 @@ watch(
   line-height: 1.75rem;
   text-transform: uppercase;
 }
+
 .items {
   display: flex;
   align-items: center;
@@ -69,6 +97,7 @@ watch(
 .text-list {
   padding-left: 26px;
 }
+
 .nav-header {
   margin-top: 70px;
   display: flex;
@@ -76,4 +105,3 @@ watch(
   align-items: center;
 }
 </style>
-
