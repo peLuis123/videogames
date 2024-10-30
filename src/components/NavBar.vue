@@ -2,7 +2,7 @@
   <v-app-bar :elevation="0">
     <v-app-bar-nav-icon variant="text" @click="$emit('someEvent')" />
 
-    <v-toolbar-title>plantilla</v-toolbar-title>
+    <v-toolbar-title>GameHub</v-toolbar-title>
 
     <v-spacer />
     <v-btn @click="toggleTheme" icon>
@@ -79,7 +79,9 @@ const user = computed(
 );
 const logout = async () => {
   try {
+    authStore.logout()
     await AuthAPI.Logout();
+    
     window.location.href = "/login";
   } catch (error) {
     console.error("Error during logout:", error);

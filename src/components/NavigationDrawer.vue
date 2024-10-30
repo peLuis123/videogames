@@ -9,7 +9,7 @@
             <h1
               class="font-weight-medium leading-normal text-xl text-uppercase"
             >
-              plantilla
+              GameHub
             </h1>
           </RouterLink>
         </slot>
@@ -33,34 +33,34 @@ import { ref, computed, watch } from "vue";
 import { useAuthStore } from "@/store/authStore";
 
 import logo from "@/assets/images/logo.svg?raw";
- 
+
 const authStore = useAuthStore();
 
 const props = defineProps({
   drawer: Boolean,
 });
- 
+
 const menuItems = [
   {
-    icon: "mdi-view-dashboard",
+    icon: "mdi-account-group",
     title: "users",
     value: "/",
-    roles: [ "admin"],
+    roles: ["admin"],
   },
   {
-    icon: "mdi-account-alert",
+    icon: "mdi-gamepad-variant",
     title: "Videojuegos",
     value: "/games",
     roles: ["user", "admin"],
   },
   {
-    icon: "mdi-account-alert",
+    icon: "mdi-library-shelves",
     title: "biblioteca",
     value: "/biblioteca",
     roles: ["user"],
   },
 ];
- 
+
 const filteredMenuItems = computed(() => {
   return menuItems.filter((item) => item.roles.includes(authStore.rol));
 });

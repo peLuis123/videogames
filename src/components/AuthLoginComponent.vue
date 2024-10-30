@@ -5,12 +5,12 @@
       <VCardItem class="justify-center">
         <RouterLink to="/" class="d-flex align-center gap-3">
           <div class="d-flex" v-html="logo" />
-          <h2 class="font-weight-medium text-2xl text-uppercase">plantilla</h2>
+          <h2 class="font-weight-medium text-2xl text-uppercase">GameHub</h2>
         </RouterLink>
       </VCardItem>
 
       <VCardText class="pt-2">
-        <h4 class="text-h4 mb-1">Welcome to plantilla! 👋🏻</h4>
+        <h4 class="text-h4 mb-1">Welcome to GameHub! 👋🏻</h4>
         <p class="mb-0">
           Please sign-in to your account and start the adventure
         </p>
@@ -105,8 +105,8 @@ const login = async () => {
       password: form.value.password,
     };
     const response = await AuthAPI.Login({ data });
-    console.log(response.data);
-    authStore.setUser(response.data);
+    console.log(response.data.data.user)
+    authStore.setUser(response.data.data.user);
     router.push("/dashboard");
   } catch (error) {
     console.error("Error logging in:", error);

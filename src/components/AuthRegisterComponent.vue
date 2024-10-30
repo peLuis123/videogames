@@ -5,7 +5,7 @@
       <VCardItem class="justify-center">
         <RouterLink to="/" class="d-flex align-center gap-3">
           <div class="d-flex" v-html="logo" />
-          <h2 class="font-weight-medium text-2xl text-uppercase">plantilla</h2>
+          <h2 class="font-weight-medium text-2xl text-uppercase">GameHub</h2>
         </RouterLink>
       </VCardItem>
 
@@ -103,13 +103,15 @@ import { useRouter } from "vue-router";
 import { useTheme } from "vuetify";
 import AuthProvider from "@/components/AuthProvider.vue";
 import logo from "@/assets/images/logo.svg?raw";
+import { useAuthStore } from "@/store/authStore";
+import { Auth as AuthAPI } from "@/services/auth";
 const form = ref({
   username: "",
   email: "",
   password: "",
   terms: false,
 });
-
+const authStore = useAuthStore()
 const vuetifyTheme = useTheme();
 const router = useRouter();
 const isPasswordVisible = ref(false);
@@ -119,6 +121,19 @@ const toggleTheme = () => {
     vuetifyTheme.global.name.value === "light" ? "dark" : "light";
 };
 const createAccount = async () => {
-  console.log("register");
+  try {
+    const data = {
+      name: form.value.username,
+      email: form.value.email,
+      password: form.value.password,
+      rol: "user"
+    };
+    console.log(data)
+    const response = await AuthAPI.Register({ data });
+    authStore.setUser(response.data);
+    router.push("/dashboard");
+  } catch (error) {
+    console.error("Error logging in:", error);
+  }  
 };
 </script>
