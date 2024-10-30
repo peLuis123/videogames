@@ -11,7 +11,7 @@
       }}</v-icon>
     </v-btn>
     <div class="mr-2">
-      {{ user.username }}
+      {{ user.name }}
     </div>
     <v-menu min-width="200px" rounded>
       <template #activator="{ props }">
@@ -24,7 +24,7 @@
       <v-card>
         <v-card-text>
           <div class="mx-auto text-center">
-            <h3>{{ user.username }}</h3>
+            <h3>{{ user.name }}</h3>
             <p class="text-caption mt-1">
               {{ user.email }}
             </p>
@@ -53,27 +53,36 @@
         </v-card-text>
       </v-card>
     </v-menu>
-
-    <!-- Toggle Theme Button -->
   </v-app-bar>
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
-import { useTheme } from "vuetify"; 
-const { global } = useTheme(); 
+import { useTheme } from "vuetify";
+const { global } = useTheme();
+
+import { Auth as AuthAPI } from "@/services/auth";
+import { useAuthStore } from "@/store/authStore";
+const authStore = useAuthStore(); 
 const isDarkTheme = computed(() => global.name.value === "dark");
 
 const toggleTheme = () => {
   global.name.value = isDarkTheme.value ? "light" : "dark";
-}; 
-const user  = {
-  initials: "NN",
-  username: "Usuario no identificado",
-  email: "correo@ejemplo.com",
 };
- 
+const user = computed(
+  () =>
+    authStore.authUser || {
+      initials: "NN",
+      name: "Usuario no identificado",
+      email: "correo@ejemplo.com",
+    }
+);
 const logout = async () => {
-  console.log('logout')
+  try {
+    await AuthAPI.Logout();
+    window.location.href = "/login";
+  } catch (error) {
+    console.error("Error during logout:", error);
+  }
 };
 </script>
