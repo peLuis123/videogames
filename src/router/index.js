@@ -1,6 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '@/views/AuthLoginView.vue';
-import AuthRegister from '@/views/AuthRegisterView.vue';  
+import AuthRegister from '@/views/AuthRegisterView.vue'; 
+import Videojuegos from '@/views/VideojuegosView.vue'; 
+import UsersView  from '@/views/UsersView.vue'
+import BibliotecaView  from '@/views/BibliotecaView.vue'
+import { useAuthStore } from '@/store/authStore';
+
 
 const routes = [
 
@@ -22,7 +27,17 @@ const routes = [
       {
         path: '/',
         name: 'Home',
-        component: () => import('@/views/Home.vue'),
+        component:  UsersView
+      },
+      {
+        path: '/games',
+        name: 'games',
+        component: Videojuegos,
+      },
+      {
+        path: '/biblioteca',
+        name: 'biblioteca',
+        component: BibliotecaView,
       },
     ],
   },
@@ -33,30 +48,30 @@ const router = createRouter({
   routes,
 });
 
-// router.beforeEach(async (to, from, next) => {
-//   // const authStore = useAuthStore()
-//   const publicPages = ['/login', '/register'];
-//   const isPublic = publicPages.includes(to.path);
-//   if (!authStore.isAuthenticated) {
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore()
+  const publicPages = ['/login', '/register'];
+  const isPublic = publicPages.includes(to.path);
+  if (!authStore.isAuthenticated) {
 
-//     try {
-//       await authStore.fetchUser()
-//     } catch (error) {
-//       console.error(error)
-//     }
-//   }
-//   if (!authStore.isAuthenticated && isPublic) {
+    try {
+      await authStore.fetchUser()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+  if (!authStore.isAuthenticated && isPublic) {
 
-//     return next()
-//   }
+    return next()
+  }
 
-//   if (isPublic && authStore.isAuthenticated) {
-//     return next('/dashboard')
-//   }
-//   if (!authStore.isAuthenticated) {
-//     return isPublic ? next() : next('/login')
-//   } 
-//   return next()
-// });
+  if (isPublic && authStore.isAuthenticated) {
+    return next('/dashboard')
+  }
+  if (!authStore.isAuthenticated) {
+    return isPublic ? next() : next('/login')
+  } 
+  return next()
+});
 
 export default router
