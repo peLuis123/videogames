@@ -19,12 +19,10 @@
       <VCardText>
         <VForm @submit.prevent="login">
           <VRow>
-            <!-- email -->
             <VCol cols="12">
               <VTextField v-model="form.email" label="Email" type="email" />
             </VCol>
 
-            <!-- password -->
             <VCol cols="12">
               <VTextField
                 v-model="form.password"
@@ -36,7 +34,6 @@
                 "
                 @click:append-inner="isPasswordVisible = !isPasswordVisible"
               />
-              <!-- remember me checkbox -->
               <div
                 class="d-flex align-center justify-space-between flex-wrap my-6"
               >
@@ -44,7 +41,6 @@
                 <a class="text-primary">Forgot Password?</a>
               </div>
 
-              <!-- login button -->
               <VBtn block type="submit">Login</VBtn>
             </VCol>
 
@@ -67,7 +63,6 @@
         </VForm>
       </VCardText>
 
-      <!-- Switch theme button -->
       <VCardActions>
         <VBtn
           icon="mdi-theme-light-dark"
@@ -84,12 +79,16 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useTheme } from "vuetify";
 import AuthProvider from "@/components/AuthProvider.vue";
-import logo from "@/assets/images/logo.svg?raw"; 
+import logo from "@/assets/images/logo.svg?raw";
+
+import { Auth as AuthAPI } from "@/services/auth";
+import { useAuthStore } from "@/store/authStore";
 const form = ref({
   email: "",
   password: "",
   remember: false,
-}); 
+});
+const authStore = useAuthStore();
 const vuetifyTheme = useTheme();
 const router = useRouter();
 const isPasswordVisible = ref(false);
@@ -100,6 +99,17 @@ const toggleTheme = () => {
 };
 
 const login = async () => {
-  console.log('logio')
+  try {
+    const data = {
+      email: form.value.email,
+      password: form.value.password,
+    };
+    const response = await AuthAPI.Login({ data });
+    console.log(response.data);
+    authStore.setUser(response.data);
+    router.push("/dashboard");
+  } catch (error) {
+    console.error("Error logging in:", error);
+  }
 };
 </script>
